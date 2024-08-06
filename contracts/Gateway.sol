@@ -26,7 +26,11 @@ contract Gateway {
    return addressToAmount[msg.sender]>=amount;
  }
 
-  function getAddress() public view returns(address){
+ function getPaidAmount()public view returns(uint){
+   return addressToAmount[msg.sender];
+ }
+
+ function getAddress() public view returns(address){
     return msg.sender;
   }
 
