@@ -74,7 +74,7 @@ function App() {
         console.log("contract not connected")
         return
       }
-      const paidAmount = await contract.getPayedAmount();
+      const paidAmount = await contract.getPaidAmount();
       console.log("paid: " + paidAmount.toString())
       console.log("paid: " + paidAmount)
     }
