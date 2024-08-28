@@ -16,16 +16,16 @@ function App() {
   async function loadBlockchainData() {
     const newProvider = new ethers.BrowserProvider(window.ethereum)
     setProvider(newProvider)
-    console.log("newProvider: \n" + newProvider)
+    console.log("newProvider: \n" + JSON.stringify(newProvider))
     const newSigner = await newProvider.getSigner()
     setSigner(newSigner)
-    console.log("newSigner: \n" + newSigner)
+    console.log("newSigner: \n" + JSON.stringify(newSigner))
     const newContract = new Contract(contractAddress, contractAbi, newSigner)
     setContract(newContract)
 
     const newAccount = await newSigner?.getAddress()
     setAccount(newAccount)
-    console.log("newAccount: " + newAccount)
+    console.log("newAccount: " + JSON.stringify(newAccount))
   }
 
   useEffect(() => {
@@ -42,7 +42,7 @@ function App() {
   )
 
   function PayToContractFC() {
-    const amountRef = useRef(0)
+    const amountRef = useRef<HTMLInputElement>(null)
     return (
       <div>
         <input ref={amountRef} placeholder='amount' type='number' />
@@ -54,19 +54,19 @@ function App() {
     )
 
     async function payToContract() {
-      const amountValue = amountRef.current
-      console.log("value: " + JSON.stringify(amountValue.valueOf));
-      console.log("value: " + amountValue.valueOf());
+      const amountValue = amountRef.current?.value
+      console.log("value: " + JSON.stringify(amountValue));
+      console.log("value: " + amountValue);
 
       if (!contract) return;
 
-      const tx = await contract.payToContract(parseUnits("0.0000001", "ether"), {
-        value: ethers.parseUnits("0.00000001")
+      const tx = await contract.payToContract(parseUnits("0.00000001", "ether"), {
+        value: ethers.parseUnits("0.0000001")
       })
       await tx.wait()
-      const response = await contract.verifyTransaction(parseUnits("0.0000001", "ether"))
+      const response = await contract.verifyTransaction(parseUnits("0.00000001", "ether"))
 
-      console.log(response)
+      console.log(JSON.stringify(response))
     }
 
     async function getPaidAmount() {
@@ -75,6 +75,7 @@ function App() {
         return
       }
       const paidAmount = await contract.getPaidAmount();
+      setPaidAmt(paidAmount)
       console.log("paid: " + paidAmount.toString())
       console.log("paid: " + paidAmount)
     }
